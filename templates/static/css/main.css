@@ -1,0 +1,14 @@
+
+html * {
+    font-family: sans-serif;
+}
+
+.images {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2.5vw;
+}
+
+.images img {
+    max-width: 45vw;
+}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %} Error {{ num_error }} {% endblock %}
+
+{% block content %}
+    <h1>Error</h1>
+    {% if error %}
+        <pre>{{ error }}</pre>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Go Home</a>
+    <p>Yours Truly. [REDACTED]</p>
+{% endblock %}

@@ -4,7 +4,9 @@ start: 14/06/2020
 end: 
 
 sessions:
-- 14/06/2020 14:51 | 
+- 14/06/2022 14:51 | 20:01
+- 15/06/2022 21:08 | 22:37
+- 16/06/2022 14:04 | 
 
 ## Que es Flask?
 
@@ -70,3 +72,140 @@ Las cookies son valores que podemos agregarle a los usuarios cuando
 esten usando nuestro sitio web, como login, entre otros. Con Flask 
 podemos crear cookies que tendran un valor y un nombre, la cual 
 podremos usar.
+
+## Templates en Flask
+
+Las Templates son fracciones o archivos enteros de HTML5 que nos 
+va a permitir darle informacion y el sitio web como tal al usuario.
+Flask tiene integrado un render de estas templates y estas van a 
+estar guardadas en el dir templates/
+
+Con los templates se pueden enviar valores y variables para que no solo 
+muestren dados estaticos, si no dinamicos.
+Estos se acceden usando {{ valor }}
+Y como generalmente vamos a tener varios valores a enviar, lo recomendado 
+es hacer un dict de context, el cual vamos a pasar a la templeate usando 
+el unpack de dict:
+
+context = { ... valores de la template }
+render_template("template", \*\*context)
+
+Así no tendremos que acceder a context para tener cada valor en nuestra template.
+
+## Syntaxis de Jinja2
+
+En jinja 2 tiene una syntaxis parecida a html, con unas añadiduras para ser 
+procesadas. Se puede usar comentario, print y sentence. Las cuales 
+nos permitiran hacer diferentes acciones, principalmente la sentece.
+
+{# comentario #}: Se usa para comemtarios que no se muestren en el html final
+{{ variable }}: Se usa para imprimir una variable o valor en el html final, se puede usar tambien para macros
+{% sentece %}: Se usa para realizar una sentencia de lógica o de programación. Se usa en:
+- estructuras de control: if, else, for, while
+- estructuras de template: extends, block, macro
+Se deben cerrar especificando con {% endsentence %}, cambiando sentence por el nombre de 
+la sentece usada.
+Como algunas veces vamos a tener que hacer de varios niveles nuestras sentence, el whitespace 
+tambien va a ser usado en el htmlfinal, para evitar esto, vamos a usar un - en el primer % de 
+la sentece y otro - en el ultimo % del endsentence
+{%- sentece  %}
+	...
+{% endsentece -%}
+
+## Estructuras de Control
+
+Las estructuras de control, en las plantillas, son formas en las que podemos 
+hacer llamado a bloques de código como ifs, elses, loops, etc.
+
+Estas van a tener que ser abiertas y usadas con {% estructura %}, las cuales son 
+exactamente iguales a las de python normal, pero sin ":".
+Y van a tener que ser cerradas usando {% end"estructura" %} dado a que no contamos
+con iteraciona
+
+## Herancia de Templates
+
+Con las templates, para evitar tener que repetir código, podemos hacer diferentes
+llamados o herencias en las templates de otras templates de html.
+
+### Extends
+Podemos directamente hacer un export, el cual va a tomar todo el código html de la 
+template dada, hasta que cierre la tiqueta </hmtl>. Esto puede generar problemas ya 
+que podemos tener problemas al exportar todo un archivo html completo.
+Para hacer un export usamos la sintaxis de las estructuras de control y usamos 
+export "template.html"
+
+{% extends 'template.html' %}
+
+Debemos tener en cuenta que al llamar el export, se va a poner la template en la 
+posicion en la que fue llamada. Util para tener en cuenta el orden de declaracion de los 
+blocks y en el export de templates pequeñas cómo modulos de otra más grande.
+
+### Blocks
+Pero se puede hacer diferentes bloques de templates para evitar problemas con el export. 
+Las cuales nos permitiran hacer diferentes estructuras en las templates.
+Se define con block nombre y al final con endblock.
+Se puede hacer varios blocks con los mismos nombres, y estos seran reescritos, pero 
+usables con super() dentro del block.
+
+{% block nombre %} ... {% endblock %}
+{% block nombre %} 
+{{ super() }}
+...
+{% endblock %}
+
+Es importante al momento de crear la base de nustra estructura, llamar a render de 
+template al archivo que tenga el export, ya que puede generar errores de carga y demás.
+
+### Macros
+Los Macros son partes de html que se repiten y que pueden tener alguna que otra 
+variacion, cómo si fueran una funcion. Estos generalmente se van a 
+escribir en un archivo y se importaran para su uso. 
+Se usa la misma sintaxis de sentence.
+
+{% macro nombre_macro(args) %}
+... {{ args }}
+{% endmacro %}
+
+// En el archivo donde se van a usar los macros
+
+{% import "macros.hmtl" as variable_macros %}
+{{ variable_macros.nombre_macro(args) }}
+
+## Include 
+
+Include nos permite tomar templates pequeñas y agregarlas a otras, sin nada más.
+{% include "archivo.html" %}
+
+## Archivos staticos en Flask
+
+Los archivos estaticos en Flask se organizan en una carpeta llamada 
+static, pueden ser:
+- css
+- js
+- imagenes
+- videos
+- etc
+Por lo general cada tipo de archivo deberia tener su propia carpeta.
+Para acceder a los elementos vamos a tener que usar {{ url_for("static". filename="carpeta/archivo") }}
+Y desde ahí nos dara el url del archivo, para despues usarlo en las tags o campos que se necesite.
+
+## Manejo de Errores HTTP
+
+Los errores en HTTP generalmente son de rangos 400 y 500. Para manejarlos, los vamos a 
+tener que hacer justo como las urls. Pero con otro decorador.
+
+@app.errorhandle(num_error)
+
+Los rangos de códigos http son:
+- 100: mensajes informativos entre navegador y server
+- 200: mensaje y envio de informacion correcta
+- 300: mensaje de reenvio & redirecciones
+- 400: error de cliente, archivo privado o no existente
+- 500: error de servidor
+
+Para poder simular un error de servidor, podemos retornar en una 
+route una execption 500.
+
+@app.route("/error-test")
+def error_500():
+	raise Exception("500 error")

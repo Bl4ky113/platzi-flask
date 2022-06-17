@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %} Hello World {% endblock %}
+
+{% block content %}
+    <h1>Hello World!!!</h1>
+    {% if user_ip %}
+        <h2> Your IP address is: {{ user_ip }} </h2>
+    {% else %}
+        <h2> We Don't Know your IP address yet </h2>
+        <a href="{{ url_for("index")  }}">Please Help us to get it</a>
+    {% endif %}
+    <p>We are Coming to Your Location. Be Ready</p>
+    <tr></tr>
+    <h3>Next Targets</h3>
+    <ul>
+        {% if targets %}
+            {% for target in targets %}
+                <li>{{ target }}</li>
+            {% endfor %}
+        {% else %}
+            <li> None, all targets, except you, are gone </li>
+        {% endif %}
+    </ul>
+    {% block whoWeAre %}
+        <hr></hr>
+        <h1>We are [REDACTED]</h1>
+        <p>
+            We are the [] of [] by [] for [] and [] also [] but [] and always [] 
+            never [] in the eyes of [] under the shadow of [] to bright like [].
+        </p>
+    {% endblock %}
+    {% block sectionImages %}
+        <section class="images">
+        {% for image in images %}
+            {% set image_url = url_for("static", filename=image) %}
+            {{ macros.image(image_url) }}
+        {% endfor %}
+        </section>
+    {% endblock %}
+{% endblock %}

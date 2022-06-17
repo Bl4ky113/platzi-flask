@@ -1,0 +1,11 @@
+# Python
+venv/
+__pycache__/
+
+# Neovim
+*.*~
+
+# Flask
+*.png
+*.jpg
+*.gif
