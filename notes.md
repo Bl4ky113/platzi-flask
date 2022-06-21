@@ -6,7 +6,11 @@ end:
 sessions:
 - 14/06/2022 14:51 | 20:01
 - 15/06/2022 21:08 | 22:37
-- 16/06/2022 14:04 | 
+- 16/06/2022 14:04 | 22:48
+- 17/06/2022 15:01 | ...
+- 18/06/2022 ...   | ...
+- 19/06/2022 17:11 | 20:11
+- 20/06/2022 14:38 | 16:30
 
 ## Que es Flask?
 
@@ -209,3 +213,180 @@ route una execption 500.
 @app.route("/error-test")
 def error_500():
 	raise Exception("500 error")
+
+## Extensiones de Flask: Bootstrap
+
+Como visto anteriomente las extensiones de flask son modulos que podemos agregar 
+para tener más funcionalidades. 
+
+Bootstrap es un framework de css, que nos permite hacer UI webs de una forma sencilla.
+Pero con flask podemos usarlo para crear las templates de una forma más sencilla tambien, usando
+las templates de jinja, que teniamos, solo requieren unos cambios pequeños de syntaxis.
+
+Para instalar bootstrap, vamos a usar pip. pip3 install flask-bootstrap. Y para inicializarlo 
+vamos a:
+1. Importar la clase Bootstrap de flask_bootstrap
+2. Crear una instancia de Bootstrap
+	- Pasar la app de Flask como arg al crear la instancia
+3. Usarla.
+
+Este proceso generalmente se puede hacer en la gran mayoria de extensiones, pero algunos no 
+son compatibles con este metodo.
+
+El principal uso es en las templates de jinja2. Y usa de varios 
+blocks para hacer su estrucutra. Aunque tambien si estamos cortos de tiempo y 
+desarrollo, podemos elegir usar un component de bootstrap, copiandolo, pegandolo y
+cambiando lo que necesitamos.
+
+## Configuracion de Flask
+
+### Enviroment de servidor
+El servidor puede ser tanto de produccion, o listo para ser usado por el usuario, como de development o testing.
+Para cambiar esto, vamos a exportar una variable que tenga un enviroment valido.
+
+export FLASK_ENV=development | production
+
+### Debug
+
+Ya lo hemos visto, pero se declara con:
+export FLASK_DEBUG=1 | 0
+
+### Testing
+
+Para declarar que estamos haciendo testing en nuestra app de Flask, vamos a crear una env variable, y debemos 
+asegurarnos no estar en production.
+
+export TESTING=TRUE | FALSE
+
+### Otras opciones de testing
+
+Hay varias opciones de testing y desarrollo que generalmente son solo de mostrar, guardar o hacer X cosa 
+especifica cuando ocurre una situacion, generalmente errores.
+
+### Secret Key
+
+Es una key que nos permite encriptar unos valores de cookies. generalmente de sessions.
+
+### Session
+
+Las sessions son formas en las que los usuarios y servidores pueden comunicarse de una forma segura 
+y encriptada, para no tener que caer en el uso de cookies sin restriccion, ya que estas pueden ser 
+interceptadas o robadas. 
+
+Generalmente se usan para realizar sesiones de cuentas, entre otros.
+
+### Configuracion desde archivos
+
+Se puede configurar nuestra app usando arvhicos de python, declarando variables. 
+U usando json o toml.
+
+El archivo de python generalmente se hace poniendo su path en una env variable. Y despues accediendo a 
+esta con python. 
+
+Lo recomendado es tener diferentes configuraciones para development y production, lo cual se 
+puede hacer usando estas caracteristicas. 
+
+## App / Request Context
+
+En Python no se pueden manejar valores globales en multi threading, para evitar 
+esto, Flask genera contextos que acaparan un gran valor de variables y valores. 
+De diferentes categorias, como la app cómo tal y los request del usuario.
+
+Esto lo hace formando proxies o intermedarios entre los datos necesarios.
+- App: current_app y g
+	- Configuracion de la app
+	- Logger
+	- Conection a una db
+- Req: request y session
+	- URL
+	- HTTP method
+	- Headers
+	- request data
+	- sessions
+
+## Uso de Formularios con Flask What the Form
+
+What the form es una extension de Flask que nos permite interactuar con los forms que pongamos en
+nuestra página web. Es necesario usar una secret key para hacer los forms
+
+Para hacerlo lo vamos a instalar flask-wtf con pip, y importar FlaskForm de flask-wtf.
+
+Vamos a crear una clase, con herencia de FlaskForm, y vamos a definir los inputs esperados como 
+propiedades de esta. Definiendo si es un input de str o de password usando la clase de cada 
+input, importadas desde wtforms.fields, en cada input vamos a pasar el label que tengan en nuestra 
+template.
+Para evitar que los usuarios nos envien inputs vacios podemos usar un verificador de contenido
+con wtforms.validators. Mandando una instancia de esta al karg de validators. 
+Quedandonos nuestra clase de form así:
+
+class NameForm (FlaskForm):
+	string = StringField("string label", validators=(Datarequired()))
+	pwd = PasswordFiel("password label", validators=(Datarequired()))
+	submit = SubmitField("label")
+
+Pasamos una instancia del Form al context de nuestra template y vamos a poder acceder a 
+nuestros inputs fields accediendo a estos como propiedades de nuestro form. Y a sus 
+labels como propiedades de estos.
+{{ name_form.string }}
+{{ name_form.string.label }}
+
+Tambien podemos usar un metodo de wtf y bootstrap, que nos permite hacer un quick_form, 
+debemos importarlo primero:
+{% import "bootstrap/wtf.html" as wtf %}
+{{ wtf.quick_form(name_form) }}
+Imprimiendo nuestro form con su label, un line break, y el input. Hasta el submit btn del form.
+
+Una vez ya tengamos nuestro form bien hecho, podemos hacer que el action de este se rediriga a una url 
+de nuestro servidor, pero para hacer esto debemos primero tener un sistema que pueda recibir ese POST de 
+informacion.
+
+## Recibiendo POST de un Form con Flask WTForm
+
+Vamos a crear o modificar una url para nuestro sitio web, en el cual vamos a habilitar los 
+methods de POST y GET si vamos a modificar. Esto se hace junto al decorador de @app.route(), 
+declarando como una karg y pasando los metodos como un iterable.
+
+Desde la function de la url que sea de POST, vamos a crear o usar una instancia del form 
+que vayamos a tomar los datos. Vamos a crear una condicional sencilla en la que se 
+verifica que se este verificando el submit de datos, que es un metodo de la instancia del form.
+
+Ahi vamos a poder tomar los valores del form accediendo a los inputs como propiedades de la instancia, 
+y sus valores como la propiedad data de los inputs.
+
+## Flash de Confirmacion
+
+Los Flash son popups o alertas que podemos hacer para enviar informacion de confirmacion 
+al usuario. Se puede mandar el mensaje del flash a nuestras templates, usando 
+la function get_flashed_messages(), donde podremos darles un style unico. Generalmente 
+usando bootstrap.
+
+Para hacer un flash solo se va a tener que importarlo de Flask y al usarlo solo 
+pasarle el mensaje.
+
+## Flask Testing
+
+Para hcer testing con Flask, podemos usar unit testing o podemos usar la extension de 
+Flask Testing, la cual vamos a instalar con pip.
+Los tests en Flask generalmente se hacen en diferentes archivos en el folder tests. 
+
+Aunque no lo vamos a usar directamente, vamos a usar de unittesting el TextTestRunner,
+el cual correra todos los tests que vayamos haciendo. Y vamos a llamar esto usando 
+un decorador de nuestra app que nos permite crear command line interfaces. 
+
+En la terminal que lleguemos a intentar correr el comando, debemos primero exportar 
+el FLASK_APP para que funcione.
+
+Para configurar nuestro test, vamos a crear una clase con herencia de TestCase la 
+cual vamos a importar de flask_testing. 
+En la clase vamos a crear un metodo de create_app, para que nuestra app se inicialice.
+Donde vamos a configurar nuestra app para que indique que esta en testing y que se 
+pueda enviar posts de nuestros forms. Y importante retornar la app ya configurada.
+
+Despues podemos crear metodos, que empiecen por test_ ya que si no; no los lee, donde podremos hacer nuestros
+tests como tal. Generalmente son tests relacionados a una cosa, configuracion o 
+parte de nuestro programa, no vayamos a hacer un TestCase para todos los tests 
+posibles.
+
+En los tests podemos usar self y los metodos assert... para poder hacer verificaciones 
+y los tests como tal. La gran mayoria de asserts son de operadores relacionales, pero 
+tambien incluye asserts de respuestas http, redirects, entre otros.

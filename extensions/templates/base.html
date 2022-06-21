@@ -1,0 +1,51 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %} Generic Blog {% endblock %}
+
+{% block body %}
+    {% block navbar %}
+        {{ super() }}
+        {% include "navbar.html" %}
+    {% endblock %}
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" data-dismiss="alert" class="close">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% block content %}
+        {{ super() }}
+        <div class="container">
+            <h2>Day 1</h2>
+            <p>Today I saw a bird, it had feathers</p>
+            <h2>Day 2</h2>
+            <p>Yesterday I saw a bird, it had feathers</p>
+            <h2>Day 3</h2>
+            <p>I remember I saw a bird, it had feathers</p>
+            <h2>Day 4</h2>
+            <p>I have never seen a bird in my life, but I think they should have feathers</p>
+        </div>
+        <div class="container">
+            <h3>Liking My Content? Subscribe to my Blog!</h3>
+            <form action="{{ url_for('index') }}" method="POST">
+                {{ wtf.quick_form(subscribe_form) }}
+            </form>
+        </div>
+        {% if subscribed_email %}
+            <div class="container">
+                <h3>You are Subscribed to my Blog!!!</h3>
+                <p>Email Subscribed: {{subscribed_email}} </p>
+            </div>
+        {% endif %}
+        {% endblock %}
+        {% block scripts %}
+            {{ super() }}
+        {% endblock %}
+{% endblock %}
