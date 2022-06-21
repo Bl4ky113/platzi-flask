@@ -1,0 +1,19 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %} To Do Lists {% endblock %}
+
+{% block body %}
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+    {% block content %}
+        {{ super() }}
+    {% endblock %}
+    {% block scripts %}
+        {{ super() }}
+    {% endblock %}
+{% endblock %}
