@@ -14,5 +14,12 @@
                 Log In
             </a>
         {% endif %}
+        {% if users %}
+            <ul>
+            {% for user in users %}
+                <li>{{ user }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}

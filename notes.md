@@ -12,6 +12,7 @@ sessions:
 - 19/06/2022 17:11 | 20:11
 - 20/06/2022 14:38 | 16:30
 - 21/06/2022 14:46 | 21:19
+- 22/06/2022 09:55 | 
 
 ## Que es Flask?
 
@@ -449,3 +450,78 @@ El crear un Blueprint es algo complicado, pero no imposible.
 7. Ya podemos usar nuestro blueprint o subdireccion en nuestra app de Flask
 
 - Para acceder a una url o route desde un blueprint, generalmente con url_for, vamos a escribir "blueprint.route"
+
+## Bases de Datos en Flask
+
+Como explicado anteriormente, Flask no tiene definida una db para su uso. Si no que tenemos nosotros
+que implementar la que vayamos a usar. Lo que vamos a definir es un ORM y el tipo de base de datos que vamos a usar.
+
+### Que es ORM 
+ORM o Object Relational Mapping es una tecnica que nos permite convertir datos, generalmente de 
+dbs, en objects de programacion. 
+
+Los ORMs que se pueden utilizar en flask son extensiones de estos, para dbs SQL generalmente se 
+usa SQLAlchemy, Y en el proyecto del curso vamos a usar la db de google, firestore. En donde
+vamos a usar una db NoSQL, No Relacional, basada en documentos.
+
+Vamos a tener que crear una cuenta en Google Cloud Plataform. Y tener que instalar un cli para 
+poder usar la terminal de nuestra db desde nuestra terminal. Aunque lo mejor seria utilizar una 
+cli en el navegador para no instalar ninguna cosa de Google en mi sistema.
+Podemos usar una terminal cloud que nos da Google, que es mejor que instalar gcloud en nustro OS.
+
+## Crear una DB de Firestore en Google Cloud.
+
+Despues de crear nuestra cuenta en Google Cloud, generalmente solo conectar nuestra cuenta de 
+gmail. Vamos a crear un proyecto, ir al menu de la izquierda & buscar el recurso de firestore.
+Vamos a crear una db de firestore con base de documentos y collections. Vamos a elegir 
+un servidor donde vamos a guardar nuestra db, generalmente cercano a nosotros y a nuestros 
+potenciales usuarios.
+Una vez creado todo, simplemente la usamos, generando collections y sus documentos. Generalmente
+creando el schema de nuestra db. Para el proyecto, va a ser:
+
+- /
+	- /users/
+		- ../user_id
+			- user_name:str
+			- user_email:str|email
+			- user_password:str
+			- user_id/todos/
+				- todo_id
+					- description_todo:str
+					- status_todo:bool
+
+Al parecer va a tocar instalar el CLI de google, ya que no creo que se pueda mandar mi app de 
+flask al navegador, a la terminal cloud del proyecto, y que sea de una forma efectiva. :c srry foss
+
+### Configurar y demas el CLI de GCloud
+
+Lamentablemente debemos instalar el CLI GCloud para hacer funcinar nuesta app de Flask con Firestore,
+La vamos a descargar usando un curl, desempaquetamos el tar, y ejecutamos el install.sh.
+En la instalacion nos va a preguntar si queremos agregar gcloud al path, aceptamos
+Y nos va a preguntar si quiere recolectar nuestros datos anonimos, denegado.
+Despues vamos a hacer login con nuestra cuenta de google, usando:
+gcloud auth login
+
+Y iniciar el CLI con 
+gcloud init
+el cual nos va a reconfirmar nuestra session, seleccionar un proyecto y demás.
+
+Despues vamos a autenticar nuestro uso de GCloud en cuando manejo del servidor y SQL.
+gcloud auth application-default login.
+
+## Implementar Firestore en Flask
+
+Vamos a instalar con pip firebase-admin, y vamos a crear en app/firestore_services.py
+En este archivo vamos a importar firebase_admin, y aparte de firebase_admin, credentials y 
+firestore. 
+
+Vamos a crear unas credenciales de nuestra "app default" que fue la que configuramos en gcloud
+y usar el method initialize_app de firebase_admin, pasandole las credencials que creamos.
+
+la db la vamos a acceder usando el metohod client de firestore. Con esta instancia vamos a 
+acceder a nuestra db con los metodos y submetodos:
+- collection("nombre"): accedemos a collections
+	- get(): obtiene todos los docs en una lista.
+
+Una vez tengamos los documentos, vamos a poder acceder a los valores ya sea a tra vez de 
+propiedades, o convirtiendolo a dicts, con to_dict().
