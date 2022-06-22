@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %} To Do Lists {% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <div class="container">
+        <h1>To Do Lists</h1>
+        {% if u_email %}
+            <p>Logged with {{ u_email }}</p>
+        {% else %}
+            <a href="{{url_for('auth.login')}}" 
+                class="link link-primary">
+                Log In
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,11 +1,15 @@
 
-from flask import render_template
+from flask import render_template, session
 from app import create_app
 
 app = create_app()
 
 @app.route("/")
 def index ():
-    context = {}
+    user_email = session.get("u_email")
 
-    return render_template("base.html", **context)
+    context = {
+            "u_email": user_email
+            }
+
+    return render_template("index.html", **context)

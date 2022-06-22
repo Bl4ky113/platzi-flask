@@ -11,6 +11,7 @@ sessions:
 - 18/06/2022 ...   | ...
 - 19/06/2022 17:11 | 20:11
 - 20/06/2022 14:38 | 16:30
+- 21/06/2022 14:46 | 21:19
 
 ## Que es Flask?
 
@@ -390,3 +391,61 @@ posibles.
 En los tests podemos usar self y los metodos assert... para poder hacer verificaciones 
 y los tests como tal. La gran mayoria de asserts son de operadores relacionales, pero 
 tambien incluye asserts de respuestas http, redirects, entre otros.
+
+# Proyecto de Flask
+
+Nuestro proyecto va a ser una app de to do lists de nuestros usuarios.
+En donde vamos a guardar los usuarios y sus to do lists en una base de datos, 
+donde van a tener que hacer un login y subir, hacer sus to do lists.
+
+Esta app va a ser un deploy en app factory, para que se pueda acceder desde el internet.
+Pero tambien como nuestra app esta un poco desorganizada, la vamos a organizar usando blueprints.
+Haciendola un poco más modular y organizada.
+
+## Modularizacion de Apps de Flask
+
+### App
+
+Primero debemos tener un dir de nuestra app de flask, en donde vamos a 
+crear la app y agregar sus extensiones. Esto lo vamos a hacer en el 
+archivo __init__.py dentro de una function llamada create_app.
+
+Ahora para usar la app de Flask vamos a tener que importar de app, create_app.
+
+### App Config
+
+Para configuraciones de esta app vamos a hacerlo en otros archivos, así para 
+tener diferentes para cada env. Estos archivos deben estar en el dir app.
+
+### Forms 
+
+Para los forms de WTforms vamos a crear un archivo aparte, el cual se va a importar 
+cuando se necesiten los forms, dentro del dir de app.
+
+### Templates, Static y Tests
+
+Todas las carpetas que antes teniamos, las vamos a mover al dir app.
+
+## Blueprints
+
+Aunque ya tenemos casí todo organizado, podemos usar Blueprints que nos permite 
+modularizar las routes de nuestra app. 
+
+El crear un Blueprint es algo complicado, pero no imposible.
+1. Creamos un modulo en app (carpeta/__init__.py)
+2. En init vamos a crear un Blueprint importandolo desde flask
+	- Blueprint nos pide el nombre del blueprint, el nombre del archivo, y el prefijo o subdireccion de nuestro blueprint
+		"blueprint", __name__, url_prefix="/blueprint"
+3. Vamos a crear un archivo en el modulo de views, el cual va a guardar las rutas del blueprint.
+4. Tenemos que hacer un import del blueprint creado en init y desde init vamos a importar el archivo de views
+	En init: from . #module import views
+	En views: from . #module import var_blueprint
+	Obviamente quitar el #module
+5. En views vamos crear una nueva route usando el decorador de route, de var_blueprint en una function 
+	que va a ser igual a nuestras routes normales de app. Creando un contexto y haciendo render de una template.
+6. Despues de tener o para probar nuestro blueprint, vamos a ir a app/__init__.py a registrar el 
+	blueprint con ese mismo method, poniendo como arg al var_blueprint, importandolo como 
+	from .blueprint import var_blueprint.
+7. Ya podemos usar nuestro blueprint o subdireccion en nuestra app de Flask
+
+- Para acceder a una url o route desde un blueprint, generalmente con url_for, vamos a escribir "blueprint.route"
