@@ -13,27 +13,10 @@
                 class="link link-primary">
                 Log In
             </a>
-        {% endif %}
-        {% if users %}
-            <ul>
-            {% for user in users %}
-                <li>{{ user }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% if to_do_lists %}
-            <ul>
-            {% for to_do_list in to_do_lists %}
-                <li>{{ to_do_list }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% if to_dos %}
-            <ul>
-                {% for to_do in to_dos %}
-                    <li>{{ to_do }}</li>
-                {% endfor %}
-            </ul>
+            <a href="{{ url_for('auth.sign_in') }}"
+                class="link link-primary">
+                Sign In
+            </a>
         {% endif %}
     </div>
 {% endblock %}

@@ -12,7 +12,9 @@ sessions:
 - 19/06/2022 17:11 | 20:11
 - 20/06/2022 14:38 | 16:30
 - 21/06/2022 14:46 | 21:19
-- 22/06/2022 09:55 | 
+- 22/06/2022 09:55 | 22:05
+- 24/06/2022 12:05 | 22:41
+- 25/06/2022 19:17 | 
 
 ## Que es Flask?
 
@@ -523,5 +525,50 @@ acceder a nuestra db con los metodos y submetodos:
 - collection("nombre"): accedemos a collections
 	- get(): obtiene todos los docs en una lista.
 
-Una vez tengamos los documentos, vamos a poder acceder a los valores ya sea a tra vez de 
-propiedades, o convirtiendolo a dicts, con to_dict().
+Una vez tengamos los documentos, vamos a poder acceder a los valores ya sea atra vez de 
+propiedades, o convirtiendolo a dicts, con to_dict(). Uno de los valores importantes que 
+no van a estar disponibles en los dicts son los id unicos, cuales solo los accedemos desde 
+el firestore obj con la propiedad .id.
+
+## Implementar Login con nuestra db en Flask
+
+Usaremos la ext de Flask Logins para implementar logins. Vamos a crear una instancia de 
+LoginManager en init de nuestra app. Hacer set de la route de nuestro login en login_view.
+
+Y dentro de create app, vamos a hacer init a la app, recibiendo nuestra app como parameter.
+
+Si necesitamos que una ruta solo se accesible para personas ya logeadas, podemos agregar 
+a nuestra def de ruta otro decorador, abajo del de route, @login_required
+
+Pero como para tal tener usuarios logeados en nuestra app, LoginManager requiere de unos 
+modelos de usuarios que tengan unas propiedades. 
+Para no tener que escribir las propiedades, podemos hacer heritance de UserMixin de 
+flask_login. Y de esta clase, vamos a crear otra clase con los datos que vamos a tener de 
+nuestro usuario. Y pasar los datos como propiedades de ambas clases.
+
+En UserModel vamos a crear un static method que nos va a permitir hacer un query a los 
+usuarios en la db y obtener estos mismos retornandolos en una instancia de UserModel.
+
+En init de nuestra app vamos a crear una function que pida un id, email en mi caso, y 
+que retorne el UserModel del usuario con ese id, usando el method query. Y a esta 
+function le ponemos el decorador user_loader de la instancia creada del LoginManager.
+
+Con esto podemos obtener y crear un obj cómo tal de un usuario, pero nos falta 
+hacer el login cómo tal. 
+
+EL login se implementa en el proceso del POST de los datos del Login_Form en nuestra
+ruta auth.login, donde vamos a tomar los datos del formulario y:
+1. Mirar que exista el usuario
+2. Mirar que el usuario y la contraseña dada sea correcta
+3. Crear una instancia de UserModel, pasandole UserData como param
+4. Usar la function login_user de flask_login y pasarle nuestro UserModel
+5. Usar el usuario logeado con el obj current_user de flask_login. Accediendo a los 
+parametros de nuestra User Data y UserMixmin
+
+## Implementar Logout
+
+Para hacer una implementacion del Logout vamos a hacer otra ruta en 
+auth, vamos a usar la function logout_user, en la cual no necesitamos 
+pasar nada, ya que flask mismo sabe cual usuario quitar.
+Agregamos un flash, para que se note el cambio y hacemos redirect a login o 
+index para que no de error.

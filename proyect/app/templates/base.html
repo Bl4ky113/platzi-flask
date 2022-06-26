@@ -8,6 +8,16 @@
     {% block navbar %}
         {{ super() }}
     {% endblock %}
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="container">
+            <div class="alert alert-{{ category }} alert-dismissible">
+                <button type="button"
+                        data-dismiss="alert"
+                        class="close">&times;</button>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
     {% block content %}
         {{ super() }}
     {% endblock %}
