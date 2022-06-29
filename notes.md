@@ -14,7 +14,10 @@ sessions:
 - 21/06/2022 14:46 | 21:19
 - 22/06/2022 09:55 | 22:05
 - 24/06/2022 12:05 | 22:41
-- 25/06/2022 19:17 | 
+- 25/06/2022 19:17 | ...
+- 27/06/2022 12:35 | 22:12
+- 28/06/2022 16:06 | ...
+- 29/06/2022 16:15 | 
 
 ## Que es Flask?
 
@@ -572,3 +575,67 @@ auth, vamos a usar la function logout_user, en la cual no necesitamos
 pasar nada, ya que flask mismo sabe cual usuario quitar.
 Agregamos un flash, para que se note el cambio y hacemos redirect a login o 
 index para que no de error.
+
+## Implementar Sign In
+
+Para hacer sign in básicamente vamos a usar las mismas estructuras y plantillas 
+de log in, cambiandoles cosas cómo los titulos. Y agregando más inputs del usuario.
+Además al momento de ingresar la contraseña, vamos a tener que encryptarla 
+o hashsearla. Para que esta no este disponible en nuestra db, y que solo el 
+usuario pueda usarla. 
+Esto se va a hacer con la function de generate_password_hash() del modulo integrado de
+Flask, werkzeug.security, con la cual le pasamos la password y nos devuelve la 
+password hasheada.
+
+Vamos a crear una instancia de user_data con los datos que nos dieron, usando 
+una function de nuestra db, que en el curso primero se crea usando el nombre 
+del usuario el doc, y despues se hace set() de los datos del usuario. 
+Yo solo tengo que tomar los valores del usuario, convertirlo en dict y 
+hacer un add() con estos a la collection, con esto se generara automaticamente
+un id unico.
+
+Aunque nosotros ahora vamos a tener hasheada el pwd de nuestro usuario, vamos a 
+tener que modificar el login para que pueda leer estas passwords hasheadas, 
+usando check_password_hash de werkzeug.security, el cual recibe la password 
+del usuario y la password del form
+
+## Implementar To Do Lists
+
+Todo el proceso de agregar las To Do lists en el proyecto del curso 
+y el mio son difentes, la mayor diferencia entre el curso y yo son:
+- El curso hace las to do lists por cada usuario, yo 
+hago que el usuario pueda crear diferentes to do lists y que estas
+tengan a su creador como identificador.
+- El curso hace la to do list solo una lista y los to dos los 
+objs de esta. Yo hago la to do list un obj que se pueda usar y 
+que contenga objs, los to dos.
+
+## Resumen Implementacion Delete y Update de To Dos
+
+En el proyecto del curso, despues de poder crear los to dos, se genera un 
+macro de jinja para darles un style especial, en esta macro se pasan dos 
+forms para Delete y Update, los cuales solo son un botón de butmit que pasan 
+los valores de cada to do list al hacer submit, para ser eliminados de la db.
+
+Por cierto, toma los todos del usuario y los imprime con el macro en un loop.
+
+Para enviar los ids, lo que se hace es crear una url dinamica.
+
+### URL dinamicas
+
+Generalmente son URL que solo se acceden con POST, el cual 
+se usa la URL para enviar datos, para hacer esto en Flask vamos a 
+escribir una nueva function con el decorador route de nuestra app o blueprint. 
+En la url entre <>, y aunque no he podido verificar si solo se puede asi, 
+separados por / cada valor.
+
+Los valores los vamos a acceder poniendolo como arg en la function que 
+tiene el decorador. Para poder ser usadas en esta function.
+Las variables en la URL pueden tener al inicio el tipo  de la variable, dos puntos 
+y el nombre de esta, estos pueden ser:
+- string (default)
+- int
+- float
+- path (string con /)
+- uuid
+Para manejar bools, vamos a tener que usar su equivalencia en ints o strings

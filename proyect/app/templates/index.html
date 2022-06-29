@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "modules.html" as modules %}
 
 {% block title %} To Do Lists {% endblock %}
 
@@ -6,17 +7,39 @@
     {{ super() }}
     <div class="container">
         <h1>To Do Lists</h1>
-        {% if u_email %}
-            <p>Logged with {{ u_email }}</p>
-        {% else %}
-            <a href="{{url_for('auth.login')}}" 
-                class="link link-primary">
-                Log In
-            </a>
-            <a href="{{ url_for('auth.sign_in') }}"
-                class="link link-primary">
-                Sign In
-            </a>
+        <div class="container">
+            {% if current_user.is_authenticated %}
+                <p>Hello {{ current_user.name }}</p>
+                <p>Logged with {{ current_user.email }}</p>
+                <a href="{{ url_for('auth.logout') }}"
+                    class="link link-primary">
+                    Logout
+                </a>
+            {% else %}
+                <a href="{{url_for('auth.login')}}" 
+                    class="link link-primary">
+                    Log In
+                </a>
+                <a href="{{ url_for('auth.sign_in') }}"
+                    class="link link-primary">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+        {% if current_user.is_authenticated %}
+            <div class="container">
+                <a href="{{ url_for('lists.create') }}"
+                    class="link link-primary">
+                    Create a New To Do List
+                </a>
+            </div>
+        {% endif %}
+        {% if to_dos %}
+            {% for to_do in to_dos %}
+                <div class="to-do-container">
+                    {{ to_do_cell(to_do.title, to_do.author, to_do.description, to_do.id) }}
+                </div>
+            {% endfor %}
         {% endif %}
     </div>
 {% endblock %}

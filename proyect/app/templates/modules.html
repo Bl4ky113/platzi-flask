@@ -1,0 +1,13 @@
+{% macro to_do_cell(title, description, author, status, id) %}
+    <div class="to-do-cell">
+        <a class="to-do__title"
+           href="{{ url_for('lists', list_id=id) }}">
+            {{ title }}
+        </a>
+        <a class="to-do__author"
+           href="{{ url_for('user', user_id=id) }}">
+            {{ author }}
+        </a>
+        <p class="to-do__description">{{ description }}</p>
+    </div>
+{% endmacro %}

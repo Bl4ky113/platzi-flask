@@ -11,9 +11,27 @@ class LoginForm (FlaskForm):
 class SignForm (FlaskForm):
     user_name = StringField("User Name", validators=[DataRequired()])
     email = EmailField("Email", validators=(Email(), DataRequired()))
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[
+            DataRequired(),
+            EqualTo('repeat_password', "Passwords Don't Match")
+        ])
     repeat_password = PasswordField("Repeat Password", validators=(
             DataRequired(), 
-            EqualTo(password, "Passwords Don't Match")
+            EqualTo('password', "Passwords Don't Match")
         ))
-    submit_btn = SubmitField("Log In")
+    submit_btn = SubmitField("Sign In")
+
+class ToDoListForm (FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    description = StringField('Description')
+    submit_btn = SubmitField('Create New To Do List')
+
+class AddToDo (FlaskForm):
+    description = StringField('To Do Description')
+    submit_btn = SubmitField('Create To Do')
+
+class DeleteToDo (FlaskForm):
+    submit_btn = SubmitField('Delete')
+
+class UpdateTodo (FlaskForm):
+    submit_btn = SubmitField('Update')

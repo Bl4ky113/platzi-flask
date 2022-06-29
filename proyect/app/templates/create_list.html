@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Create To Do List {% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <div class="container">
+        <h1>Create a New To Do List</h1>
+        {{ wtf.quick_form(to_do_list_form) }}
+    </div>
+{% endblock %}

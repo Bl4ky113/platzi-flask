@@ -1,0 +1,46 @@
+
+.to-do-container {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr;
+}
+
+.to-do-container .to-do-cell {
+    padding: 2rem;
+}
+
+.to-do-container .to-do-cell a {
+    color: black;
+    text-decoration: none;
+}
+
+.to-do-container .to-do-cell a:hover,
+.to-do-container .to-do-cell a:active {
+    color: #000024;
+    text-decoration: underline solid #000024 1px;
+}
+
+.to-do-container .to-do-cell .to-do__title {
+    margin: 0 0.5rem;
+    border-bottom: 2px solid #000024;
+    padding: 0 0.5rem;
+
+    font-size: 1.25rem;
+    font-family: monospace;
+}
+
+.to-do-container .to-do-cell .to-do__author {
+    padding: 2rem 0.25rem;
+
+    color: #050505;
+    font-size: 1.10rem;
+    font-family: serif;
+}
+
+.to-do-container .to-do-cell .to-do__description {
+    margin: 0.5rem 0.75rem;
+
+    color: #030303;
+    font-size: 0.8rem;
+    font-family: sans-serif;
+    text-overflow: ellipsis;
+}

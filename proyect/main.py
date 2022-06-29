@@ -1,18 +1,14 @@
 
-from flask import render_template, session
-from flask_login import login_required, current_user
+from flask import render_template
+from flask_login import current_user
 
 from app import create_app
+from app.firestore_service import get_to_do_lists_by_user_id
 
 app = create_app()
 
 @app.route("/")
-@login_required
 def index ():
-    user_email = current_user.email
-
-    context = {
-            "u_email": user_email
-            }
+    context = {}
 
     return render_template("index.html", **context)
