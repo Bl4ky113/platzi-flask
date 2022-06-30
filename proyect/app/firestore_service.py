@@ -10,6 +10,9 @@ db = firestore.client()
 def get_user (user_id):
     return db.collection("users").document(user_id).get()
 
+def get_to_do_list (list_id):
+    return db.collection("to_do_lists").document(list_id).get()
+
 def get_user_id_by_email (user_email):
     user_list = db.collection("users").where("email", "==", user_email).get()
 
@@ -36,15 +39,20 @@ def get_to_do_lists_by_user_title (user_id, list_title):
 
     return to_do_list[0]
 
-def get_to_dos_in_list (to_do_list):
-    return tuple(to_do_list.collection("to_do").get())
+def get_to_dos_in_list (to_do_list_id):
+    return db.collection("to_do_lists").document(to_do_list_id)\
+            .collection("to_dos").get()
+    # return tuple(to_do_list.collection("to_do").get())
 
 def create_user (user_data):
-    db.collection("users").add({
+    user_ref = db.collection("users").document()
+    user_ref.set({
         "name": user_data.name,
         "email": user_data.email,
         "password": user_data.password
         })
+
+    return user_ref.id
 
 def create_to_do_list (to_do_list_data):
     list_ref = db.collection("to_do_lists").document()
@@ -54,4 +62,4 @@ def create_to_do_list (to_do_list_data):
         "user_id": to_do_list_data.user_id
         })
 
-    list_ref.collection("to_dos")
+    return list_ref.id

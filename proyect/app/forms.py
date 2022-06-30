@@ -26,12 +26,12 @@ class ToDoListForm (FlaskForm):
     description = StringField('Description')
     submit_btn = SubmitField('Create New To Do List')
 
-class AddToDo (FlaskForm):
+class AddToDoForm (FlaskForm):
     description = StringField('To Do Description')
     submit_btn = SubmitField('Create To Do')
 
-class DeleteToDo (FlaskForm):
+class DeleteToDoForm (FlaskForm):
     submit_btn = SubmitField('Delete')
 
-class UpdateTodo (FlaskForm):
+class UpdateTodoForm (FlaskForm):
     submit_btn = SubmitField('Update')

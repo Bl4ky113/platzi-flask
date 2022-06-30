@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} {{ to_do_list.title }} {% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <div class="container">
+        <h1>{{ to_do_list.title }}</h1>
+        <h2>{{ to_do_list.author }}</h2>
+        <p>{{ to_do_list.description }}</p>
+    </div>
+    <div class="container">
+        <ul>
+            {% for to_do in to_do_list.to_dos %}
+                <li>
+                    {{ to_do.description }}
+                    {{ to_do.status }}
+                </li>
+            {% endfor %}
+            {% if edit %}
+                {{ wtf.quick_form(add_to_do_form) }}
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

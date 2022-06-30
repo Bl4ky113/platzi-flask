@@ -2,9 +2,10 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 
-from app.forms import ToDoListForm
-from app.models import ToDoListData
-from app.firestore_service import create_to_do_list, get_to_do_lists_by_user_title
+from app.forms import ToDoListForm, AddToDoForm
+from app.models import ToDoData, ToDoListData, ToDoData
+from app.firestore_service import create_to_do_list, get_to_do_lists_by_user_title, get_to_do_list, \
+get_to_dos_in_list
 
 from . import lists
 
@@ -32,10 +33,31 @@ def create ():
             flash("To Do List already Exists", "danger")
             return redirect(url_for("lists.create"))
 
-        create_to_do_list(to_do_list)
+        list_id = create_to_do_list(to_do_list)
         flash(f"Created {to_do_title} To Do List", "info")
 
-        return redirect(url_for("index"))
+        return redirect(url_for("list_menu", to_do_list_id=list_id))
 
     return render_template("create_list.html", **context)
     
+@lists.route('/<to_do_list_id>', methods=('GET', 'POST'))
+@login_required
+def list_menu (to_do_list_id):
+    to_do_list_ref = get_to_do_list(to_do_list_id)
+    to_dos_objs = tuple(map(lambda to_do: ToDoData(**to_do.to_dict()), get_to_dos_in_list(to_do_list_id)))
+    to_do_list_obj = ToDoListData(**to_do_list_ref.to_dict(), to_dos=to_dos_objs)
+
+    add_to_do_form = AddToDoForm()
+
+    context = {
+            "to_do_list": to_do_list_obj,
+            "add_to_do_form": add_to_do_form,
+            "edit": to_do_list_ref.to_dict()["user_id"] == current_user.id
+            }
+
+    return render_template('list.html', **context)
+
+# @lists.route('/delete/<to_do_list_id>', methods=('POST'))
+# @login_required
+# def delete (to_do_list_id):
+    # return redirect(url_for('index.html'))

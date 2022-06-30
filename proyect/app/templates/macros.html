@@ -1,3 +1,5 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% macro to_do_cell(title, description, author, status, id) %}
     <div class="to-do-cell">
         <a class="to-do__title"
@@ -10,4 +12,8 @@
         </a>
         <p class="to-do__description">{{ description }}</p>
     </div>
+{% endmacro %}
+
+{% macro delete_list_macro(list_id, delete_form) %}
+    {{ wtf.quick_form(delete_form, action=url_for('lists.delete', list_id=list_id)) }}
 {% endmacro %}
