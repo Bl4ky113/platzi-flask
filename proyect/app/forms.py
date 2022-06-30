@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms.fields import EmailField, PasswordField, SubmitField, StringField
+from wtforms.fields import EmailField, PasswordField, SubmitField, StringField, BooleanField
 from wtforms.validators import Email, DataRequired, EqualTo
 
 class LoginForm (FlaskForm):
@@ -27,11 +27,12 @@ class ToDoListForm (FlaskForm):
     submit_btn = SubmitField('Create New To Do List')
 
 class AddToDoForm (FlaskForm):
-    description = StringField('To Do Description')
+    description = StringField('Description', validators=[DataRequired()])
+    status = BooleanField('Status')
     submit_btn = SubmitField('Create To Do')
 
 class DeleteToDoForm (FlaskForm):
     submit_btn = SubmitField('Delete')
 
-class UpdateTodoForm (FlaskForm):
+class UpdateToDoForm (FlaskForm):
     submit_btn = SubmitField('Update')

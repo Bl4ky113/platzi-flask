@@ -1,19 +1,31 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% macro to_do_cell(title, description, author, status, id) %}
+{% macro to_do_cell(to_do_list_id, to_do_list) %}
     <div class="to-do-cell">
         <a class="to-do__title"
-           href="{{ url_for('lists', list_id=id) }}">
-            {{ title }}
+           href="{{ url_for('lists.list_menu', to_do_list_id=to_do_list_id) }}">
+            {{ to_do_list.title }}
         </a>
-        <a class="to-do__author"
-           href="{{ url_for('user', user_id=id) }}">
-            {{ author }}
-        </a>
-        <p class="to-do__description">{{ description }}</p>
+        <h2 class="to-do__author">
+            {{ to_do_list.author }}
+        </h2>
+        <p class="to-do__description">{{ to_do_list.description }}</p>
     </div>
 {% endmacro %}
 
-{% macro delete_list_macro(list_id, delete_form) %}
-    {{ wtf.quick_form(delete_form, action=url_for('lists.delete', list_id=list_id)) }}
+{% macro render_to_do(to_do, to_do_id, to_do_list_id, delete_form, update_form, edit) %}
+    <li>
+        {{ to_do.description }}
+        <span>
+            <span class="badge">
+                {{ to_do.status }}
+            </span>
+            {% if edit %}
+                <span>
+                    {{ wtf.quick_form(delete_form, action=url_for('lists.delete_to_do_in_list', to_do_list_id=to_do_list_id, to_do_id=to_do_id)) }}
+                    {{ wtf.quick_form(update_form, action=url_for('lists.update_to_do_in_list', to_do_list_id=to_do_list_id, to_do_id=to_do_id)) }}
+                </span>
+            {% endif %}
+        </span>
+    </li>
 {% endmacro %}

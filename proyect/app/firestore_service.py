@@ -13,6 +13,13 @@ def get_user (user_id):
 def get_to_do_list (list_id):
     return db.collection("to_do_lists").document(list_id).get()
 
+def get_to_do_lists ():
+    return db.collection("to_do_lists").get()
+
+def get_to_do (list_id, to_do_id):
+    return db.collection("to_do_lists").document(list_id)\
+            .collection("to_dos").document(to_do_id).get()
+
 def get_user_id_by_email (user_email):
     user_list = db.collection("users").where("email", "==", user_email).get()
 
@@ -24,10 +31,10 @@ def get_user_id_by_email (user_email):
 def get_to_do_lists_by_user_id (user_id):
     to_do_lists = db.collection("to_do_lists").where("user_id", "==", user_id).get()
 
-    if len(to_do_lists) >= 0:
-        return None
+    return to_do_lists
 
-    return tuple(to_do_lists)
+def get_to_do_lists_except_user_id (user_id):
+    return db.collection("to_do_lists").where("user_id", "!=", user_id).get()
 
 def get_to_do_lists_by_user_title (user_id, list_title):
     to_do_list = db.collection("to_do_lists")\
@@ -42,7 +49,6 @@ def get_to_do_lists_by_user_title (user_id, list_title):
 def get_to_dos_in_list (to_do_list_id):
     return db.collection("to_do_lists").document(to_do_list_id)\
             .collection("to_dos").get()
-    # return tuple(to_do_list.collection("to_do").get())
 
 def create_user (user_data):
     user_ref = db.collection("users").document()
@@ -63,3 +69,27 @@ def create_to_do_list (to_do_list_data):
         })
 
     return list_ref.id
+
+def create_to_do (to_do_data, to_do_list_id):
+    to_do_ref = db.collection("to_do_lists").document(to_do_list_id)\
+            .collection("to_dos").document()
+
+    to_do_ref.set({
+        "description": to_do_data.description,
+        "status": to_do_data.status
+        })
+
+    return to_do_ref.id
+
+def update_to_do (to_do_list_id, to_do_id, **kargs):
+    db.collection("to_do_lists").document(to_do_list_id)\
+            .collection("to_dos").document(to_do_id).update(dict(**kargs))
+
+
+def delete_to_do (to_do_list_id, to_do_id):
+    to_do_ref = get_to_do(to_do_list_id, to_do_id)
+    
+    db.collection("to_do_lists").document(to_do_list_id)\
+            .collection("to_dos").document(to_do_id).delete()
+
+    return to_do_ref

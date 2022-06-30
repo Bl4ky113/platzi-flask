@@ -24,7 +24,7 @@ class UserModel (UserMixin):
         return UserModel(user_data)
 
 class ToDoListData ():
-    def __init__ (self, title, description, user_id, to_dos=[]):
+    def __init__ (self, title, description, user_id, to_dos={}):
         self.title = title
         self.description = description
         self.user_id = user_id

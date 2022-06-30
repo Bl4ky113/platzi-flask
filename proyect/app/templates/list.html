@@ -8,20 +8,18 @@
     {{ super() }}
     <div class="container">
         <h1>{{ to_do_list.title }}</h1>
-        <h2>{{ to_do_list.author }}</h2>
+        <h2>{{ to_do_list_author }}</h2>
         <p>{{ to_do_list.description }}</p>
     </div>
     <div class="container">
         <ul>
-            {% for to_do in to_do_list.to_dos %}
-                <li>
-                    {{ to_do.description }}
-                    {{ to_do.status }}
-                </li>
+            {% for to_do_id, to_do in to_do_list.to_dos.items() %}
+                {{ macros.render_to_do(to_do, to_do_id, to_do_list_id, delete_to_do_form, update_to_do_form, edit) }}
             {% endfor %}
-            {% if edit %}
-                {{ wtf.quick_form(add_to_do_form) }}
-            {% endif %}
         </ul>
+        {% if edit %}
+            <h3>Add a New To Do</h3>
+            {{ wtf.quick_form(add_to_do_form, action=url_for('lists.add_to_do_to_list', to_do_list_id=to_do_list_id)) }}
+        {% endif %}
     </div>
 {% endblock %}

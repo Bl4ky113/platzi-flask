@@ -34,12 +34,19 @@
                 </a>
             </div>
         {% endif %}
-        {% if to_dos %}
-            {% for to_do in to_dos %}
-                <div class="to-do-container">
-                    {{ to_do_cell(to_do.title, to_do.author, to_do.description, to_do.id) }}
-                </div>
-            {% endfor %}
+        {% if user_lists %}
+            <div class="to-do-container">
+                {% for list_id, list_obj in user_lists.items() %}
+                    {{ macros.to_do_cell(list_id, list_obj) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if others_lists %}
+            <div class="to-do-container">
+                {% for list_id, list_obj in others_lists.items() %}
+                    {{ macros.to_do_cell(list_id, list_obj) }}
+                {% endfor %}
+            </div>
         {% endif %}
     </div>
 {% endblock %}
