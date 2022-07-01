@@ -1,7 +1,11 @@
 # Curso de Flask 
 
 start: 14/06/2020
-end: 
+end: 03/06/2022 
+
+10 / 10 preguntas.
+Si me costo alguna que otra, viendo las notas de detalles que necesitaba 
+verificar, pero terminamos...
 
 sessions:
 - 14/06/2022 14:51 | 20:01
@@ -18,7 +22,7 @@ sessions:
 - 27/06/2022 12:35 | 22:12
 - 28/06/2022 16:06 | ...
 - 29/06/2022 16:15 | 19:53
-- 30/06/2022 11:27 | 
+- 30/06/2022 11:27 | 20:35 
 
 ## Que es Flask?
 
@@ -640,3 +644,29 @@ y el nombre de esta, estos pueden ser:
 - path (string con /)
 - uuid
 Para manejar bools, vamos a tener que usar su equivalencia en ints o strings
+
+## Hacer Deploy en Production
+
+En el curso vamos a hacer deploy de nuestra production a AppEngine, un host de google,
+que es bastante sencillo:
+1. Creamos un nuevo proyecto
+2. Creamos una db de firestore en el proyecto
+3. Activamos la API de Google Cloud Plataform
+4. Con el cli de gcloud vamos a cambiar al proyecto
+5. Creamos un archivo en /app.yaml de nuestro proyecto, en 
+	donde vamos a escribir lo que va correr el proyecto:
+	runtime: python310
+6. Vamos a subir nuestro proyecto por la terminal usano el 
+	archivo y el comando:
+	gclod app deploy app.yaml
+7. Despues de subir el archivo, se nos dara un link para 
+	ir a nuestro proyecto en la web.
+
+Esto es bastante sencillo, pero ocurre un gran problema, y es que para 
+activar la API se necesita un tipo de pago, son centados al mes pero 
+son dinero a google. Entonces no es una opción por el momento.
+
+Se puede hacer deploys a plataformas sin costo alguno como heroku, 
+pero no creo que se pueda hacer deploy con firestore.
+
+Entonces creo que hasta acá hemos terminado el proyecto, lamentablemente.
